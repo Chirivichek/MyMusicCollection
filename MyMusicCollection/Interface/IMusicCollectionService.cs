@@ -20,6 +20,6 @@ namespace MyMusicCollection.Interface
         void ArrRatingAndReview(User currentUser);
         void ViewUserCollection(User currentUser);
         void AddToUserCollection(User currentUser);
-        void Search();
+        void AllMusic();
     }
 }

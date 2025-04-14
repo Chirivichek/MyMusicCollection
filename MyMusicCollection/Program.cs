@@ -14,22 +14,6 @@ namespace MyMusicCollection
         public static void Main(string[] args)
         {
 
-            //if (args.Length > 0 && args[0].ToLower().Contains("ef"))
-            //{
-
-            //    return;
-            //}
-
-            //IConfiguration configuration = new ConfigurationBuilder()
-            //    .SetBasePath(Directory.GetCurrentDirectory())
-            //    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            //    .Build();
-
-
-            //string connectionString = configuration.GetConnectionString("MusicCollectionDb");
-            //var optionsBuilder = new DbContextOptionsBuilder<MusicCollectionBDcontext>();
-            //optionsBuilder.UseSqlServer(connectionString);
-
             var optionsBuilder = new DbContextOptionsBuilder<MusicCollectionBDcontext>();
             string connectionString = ConfigurationManager.ConnectionStrings["MusicCollectionDb"].ConnectionString;
             optionsBuilder.UseSqlServer(connectionString);
@@ -40,7 +24,18 @@ namespace MyMusicCollection
                 var authService = new AuthService(context);
                 IAuthService authService1 = new AuthService(context);
 
-                Console.WriteLine("--------------- Welcome to the Music Collection!----------------");
+             
+
+                Console.WriteLine(" __      __       .__                               ");
+                Console.WriteLine("/  \\    /  \\ ____ |  |   ____  ____   _____   ____  ");
+                Console.WriteLine("\\   \\/\\/   // __ \\|  | _/ ___\\/  _ \\ /     \\_/ __ \\ ");
+                Console.WriteLine(" \\        /\\  ___/|  |_\\  \\__(  <_> )  Y Y  \\  ___/ ");
+                Console.WriteLine("  \\__/\\  /  \\___  >____/\\___  >____/|__|_|  /\\___  >");
+                Console.WriteLine("       \\/       \\/          \\/            \\/     \\/ ");
+
+                Console.WriteLine();
+                Console.WriteLine("\t\t\t\t\tto the Music Collection!");
+                Console.WriteLine();
                 Console.WriteLine();
 
                 User currentUser = authService1.AuthenticateUser(authService);
@@ -75,7 +70,7 @@ namespace MyMusicCollection
             while (true)
             {
                 Console.WriteLine("\n--------------- Main Menu ----------------");
-                Console.WriteLine($"[s] Search");
+                Console.WriteLine($"[s] AllMusic");
                 Console.WriteLine("[1] View User info");
                 Console.WriteLine("[2] View playlists");
                 Console.WriteLine("[3] Create playlist");
@@ -93,7 +88,7 @@ namespace MyMusicCollection
                 switch (choice)
                 {
                     case "s":      // Call method to search track or album
-                        musicCollectionService.ShowUserInfo(currentUser);
+                        musicCollectionService.AllMusic();
                         break;
                     case "1":       // Call method to view user info
                         musicCollectionService.ShowUserInfo(currentUser);
@@ -145,6 +140,7 @@ namespace MyMusicCollection
                         }
                         break;
                     case "0":// Exit the application
+                        Console.WriteLine("Exiting the application...");
                         return;
                     default:
                         Console.WriteLine("Invalid choice. Please try again.");

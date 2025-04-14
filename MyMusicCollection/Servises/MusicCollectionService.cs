@@ -611,10 +611,53 @@ namespace MyMusicCollection.Services
             }
         }
 
-        public void Search()
+        public void AllMusic()
         {
+         
+            var artists = _context.Artists
+                .Include(a => a.Albums)
+                .ThenInclude(a => a.Tracks)
+                .OrderBy(a => a.bandName)
+                .ToList();
 
+            if (!artists.Any())
+            {
+                Console.WriteLine("No artists found in the database.");
+                return;
+            }
+
+            Console.WriteLine("=== All Music in Collection ===");
+            foreach (var artist in artists)
+            {
+                Console.WriteLine($"\nArtist: {artist.bandName} ({artist.Country})");
+                Console.WriteLine($"Years Active: {artist.yearsOfActivity}");
+                Console.WriteLine($"Biography: {artist.Biography}");
+
+                if (!artist.Albums.Any())
+                {
+                    Console.WriteLine("  No albums found for this artist.");
+                    continue;
+                }
+
+                foreach (var album in artist.Albums.OrderBy(a => a.ReleaseDate))
+                {
+                    Console.WriteLine($"\n  Album: {album.AlbumName} (Released: {album.ReleaseDate:yyyy-MM-dd})");
+                    Console.WriteLine($"    Label: {album.Label}, Format: {album.Format}");
+                    Console.WriteLine($"    Duration: {album.AlbumDuration / 60}m {album.AlbumDuration % 60}s, Tracks: {album.TrackCount}");
+
+                    if (!album.Tracks.Any())
+                    {
+                        Console.WriteLine("    No tracks found for this album.");
+                        continue;
+                    }
+
+                    foreach (var track in album.Tracks.OrderBy(t => t.NumberInList))
+                    {
+                        Console.WriteLine($"    Track {track.NumberInList}: {track.TrackName} ({track.Duration / 60}m {track.Duration % 60}s)");
+                        Console.WriteLine($"      Lyrics by: {track.LyricsAuthor}, Music by: {track.MusicAuthor}");
+                    }
+                }
+            }
         }
-
     }
 }
