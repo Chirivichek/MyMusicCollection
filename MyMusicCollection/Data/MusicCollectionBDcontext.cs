@@ -32,9 +32,11 @@ namespace MyMusicCollection.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            base.OnConfiguring(optionsBuilder);
-            string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=MusicCollectionDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
-            optionsBuilder.UseSqlServer(connectionString);
+            if (!optionsBuilder.IsConfigured) 
+            {
+                string connectionString = ConfigurationManager.ConnectionStrings["MusicCollectionDb"].ConnectionString;
+                optionsBuilder.UseSqlServer(connectionString);
+            }
         }
 
 

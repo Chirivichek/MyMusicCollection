@@ -5,7 +5,7 @@ using MyMusicCollection.Entitys;
 using MyMusicCollection.Interface;
 using MyMusicCollection.Services;
 using MyMusicCollection.Entitys;
-
+using System.Configuration;
 
 namespace MyMusicCollection
 {
@@ -27,8 +27,12 @@ namespace MyMusicCollection
 
 
             //string connectionString = configuration.GetConnectionString("MusicCollectionDb");
-            var optionsBuilder = new DbContextOptionsBuilder<MusicCollectionBDcontext>();
+            //var optionsBuilder = new DbContextOptionsBuilder<MusicCollectionBDcontext>();
             //optionsBuilder.UseSqlServer(connectionString);
+
+            var optionsBuilder = new DbContextOptionsBuilder<MusicCollectionBDcontext>();
+            string connectionString = ConfigurationManager.ConnectionStrings["MusicCollectionDb"].ConnectionString;
+            optionsBuilder.UseSqlServer(connectionString);
 
             using (var context = new MusicCollectionBDcontext(optionsBuilder.Options))
             {
