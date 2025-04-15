@@ -20,6 +20,8 @@ namespace MyMusicCollection.Entitys
         public Artist Artist { get; set; } // Many-to-One relationship with Artist
         public ICollection<Genre> Genres { get; set; } // Many-to-Many relationship with Genre
         public ICollection<Track> Tracks { get; set; } // One-to-Many relationship with Track
+        public ICollection<RatingAndReview> RatingsAndReviews { get; set; }
+        public ICollection<UserCollection> UserCollections { get; set; }
     }
 
 }
