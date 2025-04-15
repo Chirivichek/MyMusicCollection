@@ -8,20 +8,20 @@ namespace MyMusicCollection.Configurations
     {
         public void Configure(EntityTypeBuilder<RatingAndReview> builder)
         {
-            // Обмеження для Rating (1–5)
+            // Limits for Rating (1–5)
             builder
                 .Property(r => r.Rating)
                 .IsRequired()
                 .HasDefaultValue(1)
                 .HasAnnotation("CheckConstraint", "Rating >= 1 AND Rating <= 5");
 
-            // Обов'язкове поле Comment
+            // Required Comment field
             builder
                 .Property(r => r.Comment)
                 .IsRequired()
                 .HasMaxLength(500);
 
-            // Каскадне видалення: якщо видаляється User або Album, видаляються пов'язані RatingAndReview
+            // Cascading delete: if User or Album is deleted, the related RatingAndReview are deleted
             builder
                 .HasOne(r => r.User)
                 .WithMany(u => u.RatingsAndReviews)

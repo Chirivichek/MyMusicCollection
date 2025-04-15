@@ -12,6 +12,7 @@ namespace MyMusicCollection.Services
 {
     public class AuthService : IAuthService
     {
+        // to store database context
         private readonly MusicCollectionBDcontext _context;
         public AuthService(MusicCollectionBDcontext context)
         {
@@ -27,9 +28,8 @@ namespace MyMusicCollection.Services
         }
         public User Logout() // Logout method
         {
-       
             Console.WriteLine("You have been logged out.");
-            // Викликаємо автентифікацію знову, щоб користувач міг увійти як інший юзер
+            // Call authentication again so the user can log in as a different user
             return AuthenticateUser(this);
         }
         
@@ -40,6 +40,7 @@ namespace MyMusicCollection.Services
                 return false;
             }
 
+            // Create a new user object with the passed data
             var newUser = new User
             {
                 UserName = userName,
@@ -47,7 +48,7 @@ namespace MyMusicCollection.Services
                 Password = password,
                 DateOfBirth = dateOfBirth
             };
-
+            //-----------------------------------------------
             _context.Users.Add(newUser);
             _context.SaveChanges();
             return true;
@@ -67,6 +68,7 @@ namespace MyMusicCollection.Services
                         Console.WriteLine("Enter your password:");
                         var password = Console.ReadLine();
                         var user = authService.Login(email, password);
+
                         if (user != null)
                         {
                             Console.WriteLine($"Welcome back, {user.UserName}!");
@@ -100,7 +102,6 @@ namespace MyMusicCollection.Services
                             Console.WriteLine("Email already exists. Please try again.");
                         }
                         break;
-
                     default:
                         Console.WriteLine("Invalid choice. Please press [1] or [2].");
                         break;

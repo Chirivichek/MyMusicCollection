@@ -13,25 +13,25 @@ namespace MyMusicCollection.Configurations
     {
         public void Configure(EntityTypeBuilder<Artist> builder)
         {
-            // Обов'язкове поле bandName
+            // Required field bandName
             builder
                 .Property(a => a.bandName)
                 .IsRequired()
                 .HasMaxLength(100);
 
-            // Унікальність bandName
+            // Uniqueness of bandName
             builder
                 .HasIndex(a => a.bandName)
                 .IsUnique();
 
-            // Каскадне видалення: якщо видаляється Artist, видаляються всі пов'язані Album
+            // Cascading delete: if an Artist is deleted, all related Albums are deleted
             builder
                 .HasMany(a => a.Albums)
                 .WithOne(a => a.Artist)
                 .HasForeignKey(a => a.ArtistId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Зв'язок Many-to-Many з Genre через ArtistGenre
+            // Many-to-Many relationship with Genre via ArtistGenre
             builder
                 .HasMany(a => a.Genres)
                 .WithMany(g => g.Artists)

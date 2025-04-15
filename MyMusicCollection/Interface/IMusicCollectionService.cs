@@ -11,7 +11,6 @@ namespace MyMusicCollection.Interface
     internal interface IMusicCollectionService
     {
         void ShowUserInfo(User currentUser);
-        //void ViewPlaylists(MusicCollectionBDcontext context, User currentUser);
         void ViewPlaylists(User currentUser);
         void CreatePlaylist(User currentUser);
         void AddTrackToPlaylist(User currentUser);

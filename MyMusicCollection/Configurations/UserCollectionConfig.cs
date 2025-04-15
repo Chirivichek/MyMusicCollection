@@ -8,16 +8,16 @@ namespace MyMusicCollection.Configurations
     {
         public void Configure(EntityTypeBuilder<UserCollection> builder)
         {
-            // Значення за замовчуванням для Status
+            // Default value for Status
             builder
                 .Property(uc => uc.Status)
                 .HasDefaultValue("wanted");
 
-            // Індекс для DateAdded
+            // Index for DateAdded
             builder
                 .HasIndex(uc => uc.DateAdded);
 
-            // Каскадне видалення: якщо видаляється User або Album, видаляються пов'язані UserCollection
+            // Cascading delete: if a User or Album is deleted, the associated UserCollections are deleted
             builder
                 .HasOne(uc => uc.User)
                 .WithMany(u => u.UserCollections)

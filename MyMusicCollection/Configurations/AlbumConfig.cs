@@ -8,29 +8,29 @@ namespace MyMusicCollection.Configurations
     {
         public void Configure(EntityTypeBuilder<Album> builder)
         {
-            // Обов'язкове поле AlbumName
+            // Required field AlbumName
             builder
                 .Property(a => a.AlbumName)
                 .IsRequired()
                 .HasMaxLength(100);
 
-            // Унікальність AlbumName для одного Artist
+            // Uniqueness of AlbumName for one Artist
             builder
                 .HasIndex(a => new { a.ArtistId, a.AlbumName })
                 .IsUnique();
 
-            // Індекс для ReleaseDate (вже є)
+            // Index for ReleaseDate 
             builder
                 .HasIndex(a => a.ReleaseDate);
 
-            // Каскадне видалення: якщо видаляється Album, видаляються всі пов'язані Track
+            // Cascading delete: if an Album is deleted, all related Tracks are deleted
             builder
                 .HasMany(a => a.Tracks)
                 .WithOne(t => t.Album)
                 .HasForeignKey(t => t.AlbumId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Зв'язок Many-to-Many з Genre через AlbumGenre
+            // Many-to-Many relationship with Genre via AlbumGenre
             builder
                 .HasMany(a => a.Genres)
                 .WithMany(g => g.Albums)

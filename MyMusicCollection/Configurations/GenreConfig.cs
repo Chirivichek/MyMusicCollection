@@ -8,13 +8,13 @@ namespace MyMusicCollection.Configurations
     {
         public void Configure(EntityTypeBuilder<Genre> builder)
         {
-            // Обов'язкове поле GenreName
+            // Required field GenreName
             builder
                 .Property(g => g.GenreName)
                 .IsRequired()
                 .HasMaxLength(50);
 
-            // Унікальність GenreName
+            // Uniqueness of GenreName
             builder
                 .HasIndex(g => g.GenreName)
                 .IsUnique();

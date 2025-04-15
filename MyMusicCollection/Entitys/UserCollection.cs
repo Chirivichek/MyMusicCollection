@@ -13,6 +13,5 @@ namespace MyMusicCollection.Entitys
         // Navigation properties
         public Album Album { get; set; } // Many-to-One relationship with Album
         public User User { get; set; } // Many-to-One relationship with User
-
     }
 }

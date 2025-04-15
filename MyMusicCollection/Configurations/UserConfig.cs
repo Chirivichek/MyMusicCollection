@@ -8,13 +8,13 @@ namespace MyMusicCollection.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            // Обов'язкове поле Username
+            // Required field Username
             builder
                 .Property(u => u.UserName)
                 .IsRequired()
                 .HasMaxLength(50);
 
-            // Унікальність Username
+            // Username uniqueness
             builder
                 .HasIndex(u => u.UserName)
                 .IsUnique();

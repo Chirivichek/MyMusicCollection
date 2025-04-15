@@ -10,7 +10,5 @@
         // Navigation properties
         public User User { get; set; } // Many-to-One relationship with User
         public ICollection<Track> Tracks { get; set; } // Many-to-Many relationship with Track
-
-
     }
 }

@@ -8,28 +8,26 @@ namespace MyMusicCollection.Configurations
     {
         public void Configure(EntityTypeBuilder<Track> builder)
         {
-            // Обов'язкове поле TrackName
+            // Required TrackName field
             builder
-     .HasMany(t => t.PlayLists)
-     .WithMany(p => p.Tracks)
-     .UsingEntity<Dictionary<string, object>>(
-         "PlaylistTrack",
-         j => j
+             .HasMany(t => t.PlayLists)
+             .WithMany(p => p.Tracks)
+             .UsingEntity<Dictionary<string, object>>(
+                 "PlaylistTrack",
+                 j => j
              .HasOne<PlayList>()
              .WithMany()
              .HasForeignKey("PlayListId")
              .OnDelete(DeleteBehavior.Cascade),
-         j => j
+                j => j
              .HasOne<Track>()
              .WithMany()
              .HasForeignKey("TrackId")
              .OnDelete(DeleteBehavior.NoAction),
-         j =>
-         {
+                 j =>
+                 {
              j.HasKey("PlayListId", "TrackId");
-         });
-
-
+                 });
         }
     }
 }

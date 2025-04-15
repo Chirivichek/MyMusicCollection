@@ -18,7 +18,6 @@ namespace MyMusicCollection.Entitys
         // Navigation properties
         public ICollection<Genre> Genres { get; set; } // Many-to-Many relationship with Genre
         public ICollection<Album> Albums { get; set; } // One-to-Many relationship with Album
-
         public override string ToString()
         {
             return $"{bandName} ({yearsOfActivity}) - {Country}";

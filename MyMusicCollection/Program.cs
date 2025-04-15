@@ -13,36 +13,37 @@ namespace MyMusicCollection
     {
         public static void Main(string[] args)
         {
+            // database connection settings
+            var optionsBuilder = new DbContextOptionsBuilder<MusicCollectionBDcontext>();                            
+            string connectionString = ConfigurationManager.ConnectionStrings["MusicCollectionDb"].ConnectionString;   
+            optionsBuilder.UseSqlServer(connectionString);                                                            
+            // -----------------------------------------------------------------------------------
 
-            var optionsBuilder = new DbContextOptionsBuilder<MusicCollectionBDcontext>();
-            string connectionString = ConfigurationManager.ConnectionStrings["MusicCollectionDb"].ConnectionString;
-            optionsBuilder.UseSqlServer(connectionString);
-
+            // using () - ensures correct resource release
             using (var context = new MusicCollectionBDcontext(optionsBuilder.Options))
             {
-
-                var authService = new AuthService(context);
+                // authentication service
+                var authService = new AuthService(context);             
                 IAuthService authService1 = new AuthService(context);
+                // -----------------------------------
 
-             
-
+                // ASCII art
                 Console.WriteLine(" __      __       .__                               ");
                 Console.WriteLine("/  \\    /  \\ ____ |  |   ____  ____   _____   ____  ");
                 Console.WriteLine("\\   \\/\\/   // __ \\|  | _/ ___\\/  _ \\ /     \\_/ __ \\ ");
                 Console.WriteLine(" \\        /\\  ___/|  |_\\  \\__(  <_> )  Y Y  \\  ___/ ");
                 Console.WriteLine("  \\__/\\  /  \\___  >____/\\___  >____/|__|_|  /\\___  >");
                 Console.WriteLine("       \\/       \\/          \\/            \\/     \\/ ");
-
                 Console.WriteLine();
                 Console.WriteLine("\t\t\t\t\tto the Music Collection!");
                 Console.WriteLine();
                 Console.WriteLine();
 
+                // user authentication
                 User currentUser = authService1.AuthenticateUser(authService);
 
                 if (currentUser != null)
                 {
-
                     currentUser = context.Users
                     .Include(u => u.PlayLists)
                     .ThenInclude(p => p.Tracks)
@@ -57,16 +58,17 @@ namespace MyMusicCollection
                         return;
                     }
 
-                    ShowMainMenu(context, currentUser);
+                    // launches the main menu of the program
+                    ShowMainMenu(context, currentUser); 
                 }
             }
         }
-
-
         static void ShowMainMenu(MusicCollectionBDcontext _context, User currentUser)
         {
+            // services for managing a music collection and for handling authentication.
             IMusicCollectionService musicCollectionService = new MusicCollectionService(_context);
             var authService = new AuthService(_context);
+            //------------------------------------------------------------------------------
             while (true)
             {
                 Console.WriteLine("\n--------------- Main Menu ----------------");
@@ -83,7 +85,6 @@ namespace MyMusicCollection
                 Console.WriteLine("[0] Exit");
                 Console.WriteLine("[*] Logout");
                 var choice = Console.ReadLine();
-
 
                 switch (choice)
                 {
@@ -118,14 +119,16 @@ namespace MyMusicCollection
                         musicCollectionService.AddToUserCollection(currentUser);
                         break;
                     case "*": // Logout
-                              // Викликаємо логаут і оновлюємо currentUser
+                        // Call logout and update currentUser
                         currentUser = authService.Logout();
                         if (currentUser == null)
                         {
                             Console.WriteLine("Authentication failed. Exiting...");
                             return;
                         }
-                        // Перезавантажуємо пов’язані дані для нового користувача
+                        //----------------------------------------------------------
+
+                        // Reload related data for the new user
                         currentUser = _context.Users
                             .Include(u => u.PlayLists)
                             .ThenInclude(p => p.Tracks)
@@ -133,6 +136,7 @@ namespace MyMusicCollection
                             .ThenInclude(uc => uc.Album)
                             .ThenInclude(a => a.Artist)
                             .FirstOrDefault(u => u.UserId == currentUser.UserId);
+                        // ---------------------------------------------------------
                         if (currentUser == null)
                         {
                             Console.WriteLine("User not found after logout.");

@@ -6,8 +6,8 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<MusicColle
 {
     public MusicCollectionBDcontext CreateDbContext(string[] args)
     {
+        // Create an object to set database context options
         var optionsBuilder = new DbContextOptionsBuilder<MusicCollectionBDcontext>();
-
 
         optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=MusicCollectionDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
 

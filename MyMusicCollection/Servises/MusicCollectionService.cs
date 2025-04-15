@@ -13,8 +13,8 @@ namespace MyMusicCollection.Services
 {
     public class MusicCollectionService : IMusicCollectionService
     {
+        // to store database context
         private readonly MusicCollectionBDcontext _context;
-
         public MusicCollectionService(MusicCollectionBDcontext context)
         {
             _context = context;
@@ -48,19 +48,25 @@ namespace MyMusicCollection.Services
                 Console.WriteLine($"[{index}] {playlist.PlayListName}");
                 index++;
             }
+
             // Get user input for playlist selection
             if (!int.TryParse(Console.ReadLine(), out int playlistIndex) || playlistIndex < 1 || playlistIndex > currentUser.PlayLists.Count)
             {
                 Console.WriteLine("Invalid selection.");
                 return;
             }
+
             // Get the selected playlist
             var selectedPlaylist = currentUser.PlayLists.ElementAt(playlistIndex - 1);
+
+            // Load all tracks for the selected playlist
             var allTracks = _context.PlayLists
              .Include(p => p.Tracks)
              .ThenInclude(t => t.Album)
              .ThenInclude(a => a.Artist)
              .FirstOrDefault(p => p.PlayListId == currentUser.PlayLists.ElementAt(playlistIndex - 1).PlayListId);
+            //--------------------------------------------------------------------------------------------------------
+
             if (allTracks == null)
             {
                 Console.WriteLine("Playlist not found in database.");
@@ -71,7 +77,6 @@ namespace MyMusicCollection.Services
                 Console.WriteLine("Playlist not found in database.");
                 return;
             }
-
             if (selectedPlaylist.Tracks == null || !selectedPlaylist.Tracks.Any())
             {
                 Console.WriteLine("No tracks in this playlist.");
@@ -90,13 +95,13 @@ namespace MyMusicCollection.Services
             switch (sortChoice)
             {
                 case "1":
-                    sortedTracks = allTracks.Tracks.OrderBy(t => t.TrackName);
+                    sortedTracks = allTracks.Tracks.OrderBy(t => t.TrackName); // sort by track name
                     break;
                 case "2":
-                    sortedTracks = allTracks.Tracks.OrderBy(t => t.Album.AlbumName);
+                    sortedTracks = allTracks.Tracks.OrderBy(t => t.Album.AlbumName); // sort by album name
                     break;
                 case "3":
-                    sortedTracks = allTracks.Tracks.OrderBy(t => t.Album.Artist.bandName);
+                    sortedTracks = allTracks.Tracks.OrderBy(t => t.Album.Artist.bandName); // sort by artist
                     break;
                 default:
                     // Default sorting (no sorting)
@@ -110,7 +115,6 @@ namespace MyMusicCollection.Services
             }
             Console.WriteLine();
         }
-
         public void CreatePlaylist(User currentUser) // Method to create a new playlist
         {
             if (currentUser == null)
@@ -120,19 +124,21 @@ namespace MyMusicCollection.Services
             }
             Console.WriteLine("Enter the name of the new playlist:");
             string playlistName = Console.ReadLine();
+            // Create a new playlist object
             PlayList newPlaylist = new PlayList
             {
                 PlayListName = playlistName,
                 DateCreated = DateTime.Now,
                 UserId = currentUser.UserId,
                 Tracks = new List<Track>() // Initialize the Tracks collection
-
             };
+            //---------------------------------------------------------------------------------
+
             if (currentUser.PlayLists == null)
             {
                 currentUser.PlayLists = new List<PlayList>();
             }
-            currentUser.PlayLists.Add(newPlaylist);
+            currentUser.PlayLists.Add(newPlaylist); // Add the new playlist to the user's playlists
             _context.PlayLists.Add(newPlaylist);
             _context.SaveChanges();
             Console.WriteLine($"Playlist '{playlistName}' created successfully.");
@@ -177,16 +183,19 @@ namespace MyMusicCollection.Services
                 return;
             }
 
+            // Load all tracks from the database
             var allTracks = _context.Tracks
             .Include(t => t.Album)
             .ThenInclude(a => a.Artist)
             .ToList();
+            //-----------------------------------
 
             if (!allTracks.Any())
             {
                 Console.WriteLine("No tracks available to add.");
                 return;
             }
+
             // Display all available tracks
             Console.WriteLine("Available Tracks:");
             index = 1;
@@ -195,6 +204,7 @@ namespace MyMusicCollection.Services
                 Console.WriteLine($"[{index}] {track.TrackName} - {track.Album.AlbumName} ({track.Album.Artist.bandName})");
                 index++;
             }
+
             // Get user input for track selection
             Console.WriteLine("Enter the track number to add:");
             if (!int.TryParse(Console.ReadLine(), out int trackIndex) || trackIndex < 1 || trackIndex > allTracks.Count)
@@ -202,23 +212,26 @@ namespace MyMusicCollection.Services
                 Console.WriteLine("Invalid track selection.");
                 return;
             }
+
             // Get the selected track
             var selectedTrack = allTracks.ElementAt(trackIndex - 1);
+
             // Check if the track is already in the playlist
             if (playlistInContext.Tracks.Any(t => t.TrackId == selectedTrack.TrackId))
             {
                 Console.WriteLine("Track is already in the playlist.");
                 return;
             }
+
             // Add the track to the playlist
             if (playlistInContext.Tracks == null)
             {
                 playlistInContext.Tracks = new List<Track>();
             }
             playlistInContext.Tracks.Add(selectedTrack);
+
             // Save changes to the database
             _context.SaveChanges();
-
 
             if (selectedPlaylist.Tracks == null)
             {
@@ -228,11 +241,9 @@ namespace MyMusicCollection.Services
             {
                 selectedPlaylist.Tracks.Add(selectedTrack);
             }
-
             Console.WriteLine($"Track '{selectedTrack.TrackName}' added to playlist '{selectedPlaylist.PlayListName}' successfully.");
         }
-
-        public void ClearPlaylistTracks(User currentUser)
+        public void ClearPlaylistTracks(User currentUser) // Method to clear all tracks from a playlist
         {
             if (currentUser == null)
             {
@@ -259,19 +270,19 @@ namespace MyMusicCollection.Services
                 return;
             }
 
+            // Get the selected playlist
             var selectedPlaylist = currentUser.PlayLists.ElementAt(playlistIndex - 1);
 
-            // Видаляємо всі записи з PlaylistTrack для цього плейлиста
+            // Delete all tracks from the playlist in the database
             _context.Database.ExecuteSqlRaw(
                 $"DELETE FROM PlaylistTrack WHERE PlayListId = {selectedPlaylist.PlayListId}");
 
-            // Очищаємо Tracks у пам’яті
+            // Clear the tracks from the playlist in memory
             selectedPlaylist.Tracks?.Clear();
 
             Console.WriteLine($"Playlist '{selectedPlaylist.PlayListName}' cleared successfully.");
-        }// Method to delete all tracks from a playlist
-
-        public void ViewRatingsAndReviews(User currentUser)
+        }
+        public void ViewRatingsAndReviews(User currentUser) // Method to view ratings and reviews
         {
             if (currentUser == null)
             {
@@ -297,11 +308,14 @@ namespace MyMusicCollection.Services
                     Console.WriteLine("You have no ratings and reviews.");
                     return;
                 }
-                 var userRatingsAndReviews = _context.RatingsAndReviews
+
+                // Load all ratings and reviews for the current user
+                var userRatingsAndReviews = _context.RatingsAndReviews
                     .Include(r => r.Album)
                     .ThenInclude(a => a.Artist)
                     .Where(r => r.UserId == currentUser.UserId)
                     .ToList();
+                //--------------------------------------------------------
 
                 Console.WriteLine("Sort by:");
                 Console.WriteLine("[1] Rating");
@@ -310,7 +324,6 @@ namespace MyMusicCollection.Services
 
                 string sortChoice = Console.ReadLine();
                 IEnumerable<RatingAndReview> sortedRatings = userRatingsAndReviews;
-
 
                 switch (sortChoice)
                 {
@@ -321,11 +334,10 @@ namespace MyMusicCollection.Services
                         sortedRatings = userRatingsAndReviews.OrderBy(r => r.Album.AlbumName);
                         break;
                     default:
-                        // За замовчуванням сортуємо за рейтингом
+                        // Default sorting (no sorting)
                         sortedRatings = userRatingsAndReviews.OrderBy(r => r.Rating);
                         break;
                 }
-
 
                 Console.WriteLine("Your ratings and reviews:");
                 int index = 1;
@@ -355,8 +367,7 @@ namespace MyMusicCollection.Services
                     return;
                 }
 
-
-                // Виводимо список альбомів
+                // Display all available albums
                 Console.WriteLine("Select an album to view ratings and reviews:");
                 int index = 1;
                 foreach (var album in allAlbums)
@@ -365,26 +376,27 @@ namespace MyMusicCollection.Services
                     index++;
                 }
 
-                // Отримуємо вибір користувача
+                //  Get user input for album selection
                 if (!int.TryParse(Console.ReadLine(), out int albumIndex) || albumIndex < 1 || albumIndex > allAlbums.Count)
                 {
                     Console.WriteLine("Invalid selection.");
                     return;
                 }
 
-                var selectedAlbum = allAlbums.ElementAt(albumIndex - 1);
+                var selectedAlbum = allAlbums.ElementAt(albumIndex - 1); // Get the selected album
 
+                // Load all ratings and reviews for the selected album
                 var albumReviews = _context.RatingsAndReviews
                     .Include(r => r.User)
                     .Where(r => r.AlbumId == selectedAlbum.AlbumId)
                     .ToList();
+                //----------------------------------------------------
 
                 if (!albumReviews.Any())
                 {
                     Console.WriteLine($"No ratings and reviews found for {selectedAlbum.AlbumName}.");
                     return;
                 }
-
 
                 Console.WriteLine("Sort by:");
                 Console.WriteLine("[1] Rating");
@@ -417,7 +429,6 @@ namespace MyMusicCollection.Services
                 }
             }
         }
-
         public void ArrRatingAndReview(User currentUser) // Method to add a rating and review
         {
             if (currentUser == null)
@@ -425,15 +436,18 @@ namespace MyMusicCollection.Services
                 Console.WriteLine("User is null.");
                 return;
             }
+            // Load all albums from the database
             var allAlbums = _context.Albums
                 .Include(a => a.Artist)
                 .ToList();
+            //------------------------------------
             if (!allAlbums.Any())
             {
                 Console.WriteLine("No albums available to rate.");
                 return;
             }
             Console.WriteLine("Available Albums:");
+
             int index = 1;
             foreach (var album in allAlbums)
             {
@@ -446,7 +460,8 @@ namespace MyMusicCollection.Services
                 Console.WriteLine("Invalid album selection.");
                 return;
             }
-            var selectedAlbum = allAlbums.ElementAt(albumIndex - 1);
+
+            var selectedAlbum = allAlbums.ElementAt(albumIndex - 1); // Get the selected album
             Console.WriteLine("Enter your rating (1-5):");
             if (!int.TryParse(Console.ReadLine(), out int rating) || rating < 1 || rating > 5)
             {
@@ -454,6 +469,7 @@ namespace MyMusicCollection.Services
                 return;
             }
             Console.WriteLine("Enter your comment:");
+
             string comment = Console.ReadLine();
             RatingAndReview newRatingAndReview = new RatingAndReview
             {
@@ -472,23 +488,27 @@ namespace MyMusicCollection.Services
             _context.SaveChanges();
             Console.WriteLine($"Rating and review for '{selectedAlbum.AlbumName}' added successfully.");
         }
-
-        public void AddToUserCollection(User currentUser)
+        public void AddToUserCollection(User currentUser) // Method to add an album to the user's collection
         {
             if (currentUser == null)
             {
                 Console.WriteLine("User is null.");
                 return;
             }
+
+            // Load all albums from the database
             var allAlbums = _context.Albums
                 .Include(a => a.Artist)
                 .ToList();
+            //---------------------------------
+
             if (!allAlbums.Any())
             {
                 Console.WriteLine("No albums available to add to your collection.");
                 return;
             }
             Console.WriteLine("Available Albums:");
+
             int index = 1;
             foreach (var album in allAlbums)
             {
@@ -501,10 +521,14 @@ namespace MyMusicCollection.Services
                 Console.WriteLine("Invalid album selection.");
                 return;
             }
+            // Get the selected album
             var selectedAlbum = allAlbums.ElementAt(albumIndex - 1);
 
+            // Check if the album is already in the user's collection
             var existingCollection = _context.UserCollections
             .FirstOrDefault(uc => uc.UserId == currentUser.UserId && uc.AlbumId == selectedAlbum.AlbumId);
+            //----------------------------------------------------------------------------------------------
+
             if (existingCollection != null)
             {
                 Console.WriteLine($"Album '{selectedAlbum.AlbumName}' is already in your collection as '{existingCollection.Status}'.");
@@ -520,15 +544,15 @@ namespace MyMusicCollection.Services
             }
             string status = choice == 1 ? "bought" : "wanted";
 
-            // Створюємо новий запис у колекції
+            // Create a new UserCollection object
             var newCollection = new UserCollection
             {
                 AlbumId = selectedAlbum.AlbumId,
                 UserId = currentUser.UserId,
                 Status = status,
                 DateAdded = DateTime.Now,
-                Album = selectedAlbum, // Встановлюємо навігаційну властивість
-                User = currentUser     // Встановлюємо навігаційну властивість
+                Album = selectedAlbum, 
+                User = currentUser   
 
             };
             if (currentUser.UserCollections == null)
@@ -536,10 +560,10 @@ namespace MyMusicCollection.Services
                 currentUser.UserCollections = new List<UserCollection>();
             }
 
-            // Додаємо до контексту і до колекції користувача
+            // Add the new collection to the user's collections
             currentUser.UserCollections.Add(newCollection);
 
-            // Зберігаємо зміни
+            // Add the new collection to the database
             try
             {
                 _context.SaveChanges();
@@ -549,8 +573,7 @@ namespace MyMusicCollection.Services
             {
                 Console.WriteLine($"Error adding album to collection: {ex.Message}");
             }
-        } // Method to add an album to the user's collection
-
+        }
         public void ViewUserCollection(User currentUser)  // Method to view the user's collection
         {
             if (currentUser == null)
@@ -558,12 +581,14 @@ namespace MyMusicCollection.Services
                 Console.WriteLine("User is null.");
                 return;
             }
+
             // Get the user's collection from the database
             var userCollections = _context.UserCollections
             .Include(uc => uc.Album)
             .ThenInclude(a => a.Artist)
             .Where(uc => uc.UserId == currentUser.UserId)
             .ToList();
+            //-------------------------------------------------
 
             if (currentUser.UserCollections == null || !currentUser.UserCollections.Any())
             {
@@ -600,7 +625,6 @@ namespace MyMusicCollection.Services
                     break;
             }
 
-
             Console.WriteLine("Your Collection:");
             int index = 1;
             foreach (var userCollection in sortedCollections)
@@ -611,14 +635,15 @@ namespace MyMusicCollection.Services
             }
         }
 
-        public void AllMusic()
+        public void AllMusic()// Method to view all music in the collection
         {
-         
+            // Method to view all music in the collection
             var artists = _context.Artists
                 .Include(a => a.Albums)
                 .ThenInclude(a => a.Tracks)
                 .OrderBy(a => a.bandName)
                 .ToList();
+            //------------------------------------------------
 
             if (!artists.Any())
             {

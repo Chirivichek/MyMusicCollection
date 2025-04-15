@@ -8,7 +8,7 @@ namespace MyMusicCollection.Configurations
     {
         public void Configure(EntityTypeBuilder<PlayList> builder)
         {
-            // Обов'язкове поле PlayListName
+            // Required field PlayListName
             builder
                 .Property(p => p.PlayListName)
                 .IsRequired()
@@ -23,14 +23,13 @@ namespace MyMusicCollection.Configurations
             builder
                 .HasIndex(p => p.DateCreated);
 
-            // Зв'язок з User (каскадне видалення не додаємо, щоб не видаляти плейлисти при видаленні користувача)
+            // Connection with User (we do not add cascading deletion so as not to delete playlists when deleting the user)
             builder
                 .HasOne(p => p.User)
                 .WithMany(u => u.PlayLists)
                 .HasForeignKey(p => p.UserId)
-                .OnDelete(DeleteBehavior.Restrict); // Не видаляти плейлисти при видаленні User
-
-            // Зв'язок Many-to-Many з Track уже визначений у TrackConfig
+                .OnDelete(DeleteBehavior.Restrict); // Do not delete playlists when deleting User
+            // Many-to-Many relationship with Track already defined in TrackConfig
         }
     }
 }
