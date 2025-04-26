@@ -9,9 +9,9 @@ using Microsoft.Extensions.Configuration;
 using System.Configuration;
 using Microsoft.Data.SqlClient;
 using System.Reflection;
-using MyMusicCollection_Api.Entities;
+using MyMusicCollection.Entities;
 
-namespace MyMusicCollection_Api.Data
+namespace MyMusicCollection.Data
 {
     public class MusicCollectionBDcontext : DbContext
     {

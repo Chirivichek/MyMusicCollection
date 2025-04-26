@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using MyMusicCollection_Api.Services;
+using MyMusicCollection.Services;
 using System.Configuration;
-using MyMusicCollection_Api.Interface;
-using MyMusicCollection_Api.Data;
-using MyMusicCollection_Api.Entities;
+using MyMusicCollection.Interface;
+using MyMusicCollection.Data;
+using MyMusicCollection.Entities;
 
-namespace MyMusicCollection_Api
+namespace MyMusicCollection
 {
     public class Program
     {

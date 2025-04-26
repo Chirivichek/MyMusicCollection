@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using MyMusicCollection_Api.Entities;
+using MyMusicCollection.Entities;
 
-namespace MyMusicCollection_Api.Configurations
+namespace MyMusicCollection.Configurations
 {
     internal class AlbumConfig : IEntityTypeConfiguration<Album>
     {

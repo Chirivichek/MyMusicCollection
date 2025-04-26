@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MyMusicCollection_Api.Data;
-using MyMusicCollection_Api.Entities;
+using MyMusicCollection.Entities;
+using MyMusicCollection.Data;
 
-namespace MyMusicCollection_Api.Interface
+namespace MyMusicCollection.Interface
 {
     internal interface IMusicCollectionService
     {

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Data;
 
-namespace MyMusicCollection_Api.Entities
+namespace MyMusicCollection.Entities
 {
     public class User
     {

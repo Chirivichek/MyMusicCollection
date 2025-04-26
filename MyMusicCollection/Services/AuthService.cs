@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using MyMusicCollection_Api.Data;
-using MyMusicCollection_Api.Entities;
-using MyMusicCollection_Api.Interface;
+using MyMusicCollection.Data;
+using MyMusicCollection.Entities;
+using MyMusicCollection.Interface;
 
-namespace MyMusicCollection_Api.Services
+namespace MyMusicCollection.Services
 {
     public class AuthService : IAuthService
     {

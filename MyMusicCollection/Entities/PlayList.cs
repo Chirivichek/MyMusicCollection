@@ -1,4 +1,4 @@
-﻿namespace MyMusicCollection_Api.Entities
+﻿namespace MyMusicCollection.Entities
 {
     public class PlayList
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using MyMusicCollection_Api.Data;
+using MyMusicCollection.Data;
 
 public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<MusicCollectionBDcontext>
 {
