@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using MyMusicCollection.Entitys;
+using MyMusicCollection_Api.Entities;
 
-namespace MyMusicCollection.Configurations
+namespace MyMusicCollection_Api.Configurations
 {
     internal class ArtistConfig
     {

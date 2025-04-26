@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using MyMusicCollection.Entitys;
+using MyMusicCollection_Api.Entities;
 
-namespace MyMusicCollection.Configurations
+namespace MyMusicCollection_Api.Configurations
 {
     internal class TrackConfig : IEntityTypeConfiguration<Track>
     {
@@ -26,7 +26,7 @@ namespace MyMusicCollection.Configurations
              .OnDelete(DeleteBehavior.NoAction),
                  j =>
                  {
-             j.HasKey("PlayListId", "TrackId");
+                     j.HasKey("PlayListId", "TrackId");
                  });
         }
     }

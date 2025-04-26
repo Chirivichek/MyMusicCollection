@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using MyMusicCollection.Data;
-using MyMusicCollection.Entitys;
-using MyMusicCollection.Interface;
+using MyMusicCollection_Api.Data;
+using MyMusicCollection_Api.Entities;
+using MyMusicCollection_Api.Interface;
 
-namespace MyMusicCollection.Services
+namespace MyMusicCollection_Api.Services
 {
     public class AuthService : IAuthService
     {
@@ -32,7 +32,7 @@ namespace MyMusicCollection.Services
             // Call authentication again so the user can log in as a different user
             return AuthenticateUser(this);
         }
-        
+
         public bool Register(string userName, string email, string password, DateTime dateOfBirth) // Register method
         {
             if (_context.Users.Any(u => u.Email == email))

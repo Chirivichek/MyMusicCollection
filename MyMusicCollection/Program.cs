@@ -1,29 +1,28 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using MyMusicCollection.Data;
-using MyMusicCollection.Entitys;
-using MyMusicCollection.Interface;
-using MyMusicCollection.Services;
-using MyMusicCollection.Entitys;
+using MyMusicCollection_Api.Services;
 using System.Configuration;
+using MyMusicCollection_Api.Interface;
+using MyMusicCollection_Api.Data;
+using MyMusicCollection_Api.Entities;
 
-namespace MyMusicCollection
+namespace MyMusicCollection_Api
 {
     public class Program
     {
         public static void Main(string[] args)
         {
             // database connection settings
-            var optionsBuilder = new DbContextOptionsBuilder<MusicCollectionBDcontext>();                            
-            string connectionString = ConfigurationManager.ConnectionStrings["MusicCollectionDb"].ConnectionString;   
-            optionsBuilder.UseSqlServer(connectionString);                                                            
+            var optionsBuilder = new DbContextOptionsBuilder<MusicCollectionBDcontext>();
+            string connectionString = ConfigurationManager.ConnectionStrings["MusicCollectionDb"].ConnectionString;
+            optionsBuilder.UseSqlServer(connectionString);
             // -----------------------------------------------------------------------------------
 
             // using () - ensures correct resource release
             using (var context = new MusicCollectionBDcontext(optionsBuilder.Options))
             {
                 // authentication service
-                var authService = new AuthService(context);             
+                var authService = new AuthService(context);
                 IAuthService authService1 = new AuthService(context);
                 // -----------------------------------
 
@@ -59,7 +58,7 @@ namespace MyMusicCollection
                     }
 
                     // launches the main menu of the program
-                    ShowMainMenu(context, currentUser); 
+                    ShowMainMenu(context, currentUser);
                 }
             }
         }

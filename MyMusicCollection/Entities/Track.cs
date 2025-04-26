@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MyMusicCollection.Entitys
+namespace MyMusicCollection_Api.Entities
 {
     public class Track
     {

@@ -6,12 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using MyMusicCollection.Entitys;
 using System.Configuration;
 using Microsoft.Data.SqlClient;
 using System.Reflection;
+using MyMusicCollection_Api.Entities;
 
-namespace MyMusicCollection.Data
+namespace MyMusicCollection_Api.Data
 {
     public class MusicCollectionBDcontext : DbContext
     {
@@ -36,7 +36,7 @@ namespace MyMusicCollection.Data
                 var cs = ConfigurationManager.ConnectionStrings["MusicCollectionDb"].ConnectionString;
                 optionsBuilder.UseSqlServer(cs);
             }
-        } 
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Use Fluent API configurations
@@ -442,5 +442,5 @@ namespace MyMusicCollection.Data
                 new { ArtistsArtistId = 3, GenresGenreId = 5 }  // Disturbed - Nu Metal
             );
         }
-        }
     }
+}

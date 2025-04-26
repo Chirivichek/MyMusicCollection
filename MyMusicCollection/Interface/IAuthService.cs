@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MyMusicCollection.Entitys;
-using MyMusicCollection.Services;
+using MyMusicCollection_Api.Entities;
+using MyMusicCollection_Api.Services;
 
-namespace MyMusicCollection.Interface
+namespace MyMusicCollection_Api.Interface
 {
     internal interface IAuthService
     {

@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using MyMusicCollection.Data;
-using MyMusicCollection.Entitys;
-using MyMusicCollection.Interface;
+using MyMusicCollection_Api.Data;
+using MyMusicCollection_Api.Entities;
+using MyMusicCollection_Api.Interface;
 
-namespace MyMusicCollection.Services
+namespace MyMusicCollection_Api.Services
 {
     public class MusicCollectionService : IMusicCollectionService
     {
@@ -295,7 +295,7 @@ namespace MyMusicCollection.Services
             Console.WriteLine("[2] View all ratings and reviews for an album");
             Console.WriteLine("Enter your choice (1 or 2):");
 
-            if (!int.TryParse(Console.ReadLine(), out int choice) || (choice != 1 && choice != 2))
+            if (!int.TryParse(Console.ReadLine(), out int choice) || choice != 1 && choice != 2)
             {
                 Console.WriteLine("Invalid selection.");
                 return;
@@ -327,8 +327,8 @@ namespace MyMusicCollection.Services
 
                 switch (sortChoice)
                 {
-                    case "1": 
-                        sortedRatings = userRatingsAndReviews.OrderBy(r => r.Rating); 
+                    case "1":
+                        sortedRatings = userRatingsAndReviews.OrderBy(r => r.Rating);
                         break;
                     case "2":
                         sortedRatings = userRatingsAndReviews.OrderBy(r => r.Album.AlbumName);
@@ -537,7 +537,7 @@ namespace MyMusicCollection.Services
 
             Console.WriteLine("Enter status for this album [1]bought, [2]wanted:");
 
-            if (!int.TryParse(Console.ReadLine(), out int choice) || (choice != 1 && choice != 2))
+            if (!int.TryParse(Console.ReadLine(), out int choice) || choice != 1 && choice != 2)
             {
                 Console.WriteLine("Invalid selection.");
                 return;
@@ -551,8 +551,8 @@ namespace MyMusicCollection.Services
                 UserId = currentUser.UserId,
                 Status = status,
                 DateAdded = DateTime.Now,
-                Album = selectedAlbum, 
-                User = currentUser   
+                Album = selectedAlbum,
+                User = currentUser
 
             };
             if (currentUser.UserCollections == null)
@@ -605,7 +605,7 @@ namespace MyMusicCollection.Services
 
             string sortChoice = Console.ReadLine();
             IEnumerable<UserCollection> sortedCollections = userCollections;
-            
+
             switch (sortChoice)
             {
                 case "1":
